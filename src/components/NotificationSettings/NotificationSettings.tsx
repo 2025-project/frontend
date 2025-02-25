@@ -35,10 +35,7 @@ const NotificationSettings = () => {
   };
 
   return (
-    <div className="w-[600px] p-6 text-lg">
-      {/* 알림 설정 제목 */}
-      <h2 className="text-2xl font-bold text-gray-700 mb-5">알림 설정</h2>
-
+    <div className="max-w-[1300px] w-full p-6 text-lg bg-white">
       {/* 알림 토글 */}
       <div className="flex items-center space-x-4 mb-6">
         <Image src="/bell.svg" alt="알림 아이콘" width={32} height={32} priority />
