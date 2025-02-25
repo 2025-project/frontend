@@ -15,14 +15,14 @@ const stockData = [
 
 const StockList: React.FC<StockListProps> = ({ hideId = false }) => {
   return (
-    <div className="w-[1000px] bg-white rounded-lg overflow-hidden">
+    <div className="w-[1300px] bg-white rounded-lg overflow-hidden">
       <table className="w-full text-right">
         <thead>
           <tr className="bg-white h-[50px] text-gray-500 text-[14px] font-thin">
-            <th className="px-6 pr-4 text-right ">종목</th>
-            <th className="px-6 pr-4 ">현재가</th>
-            <th className="px-6 pr-4 ">등락률</th>
-            <th className="px-6 pr-4 ">거래대금</th>
+            <th className="px-6 pr-8 text-right ">종목</th>
+            <th className="px-6 pr-8 ">현재가</th>
+            <th className="px-6 pr-8 ">등락률</th>
+            <th className="px-6 pr-8 ">거래대금</th>
             <th className="px-6 pr-8 ">거래량</th>
           </tr>
         </thead>
