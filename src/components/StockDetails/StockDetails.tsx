@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import saveIcon from "../StockDetails/save.svg";
+import Graphs from "../Graphs/Graphs";
 
 interface MarketData {
   price: string;
@@ -125,7 +126,7 @@ const StockDetails: React.FC<StockDetailsProps> = ({
 
       {/* 그래프 영역 */}
       <div className="w-full h-40 bg-gray-100 rounded-lg flex items-center justify-center">
-        <span className="text-gray-400">[ 그래프 ]</span>
+        <Graphs />
       </div>
     </div>
   );
