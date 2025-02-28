@@ -11,6 +11,10 @@ const NotificationSettings = () => {
     { id: 3, label: "관심종목 하락율", value: 30, checked: true, color: "text-blue-500" },
   ]);
 
+  const [inputValues, setInputValues] = useState<{ [key: number]: string }>(
+    Object.fromEntries(settings.map((item) => [item.id, item.value.toString()]))
+  );
+
   // 알림 토글 핸들러
   const toggleNotification = () => setIsNotificationOn(!isNotificationOn);
 
@@ -23,15 +27,45 @@ const NotificationSettings = () => {
     );
   };
 
-  // 숫자 변경 핸들러 (+, - 버튼 사용)
-  const handleValueChange = (id: number, delta: number) => {
+  // 입력 필드 값 변경 핸들러 (실시간 업데이트)
+  const handleInputChange = (id: number, value: string) => {
+    if (/^\d*$/.test(value)) {
+      // 숫자만 입력 가능
+      setInputValues((prev) => ({ ...prev, [id]: value }));
+    }
+  };
+
+  // 숫자 저장 로직
+  const handleSave = async (id: number) => {
+    const parsedValue = parseInt(inputValues[id], 10);
+    if (isNaN(parsedValue) || parsedValue < 1 || parsedValue > 99) {
+      alert("1~99 사이의 숫자를 입력하세요.");
+      return;
+    }
+
+    // 상태 업데이트 (UI 반영)
     setSettings((prev) =>
       prev.map((item) =>
-        item.id === id
-          ? { ...item, value: Math.max(1, Math.min(99, item.value + delta)) }
-          : item
+        item.id === id ? { ...item, value: parsedValue } : item
       )
     );
+
+    // 서버로 데이터 전송 (백엔드 API 필요)
+    try {
+      const response = await fetch("/api/save-notification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, value: parsedValue }),
+      });
+
+      if (!response.ok) {
+        throw new Error("서버 저장 실패");
+      }
+
+      console.log("✅ 저장 성공:", { id, value: parsedValue });
+    } catch (error) {
+      console.error("❌ 저장 오류:", error);
+    }
   };
 
   return (
@@ -63,7 +97,7 @@ const NotificationSettings = () => {
               item.checked ? "text-gray-900 font-medium" : "text-gray-400"
             }`}
           >
-            {/* ✅ 체크 모양만 나타나는 체크박스 */}
+            {/* 체크박스 */}
             <label className="relative flex items-center cursor-pointer">
               <input
                 type="checkbox"
@@ -87,28 +121,22 @@ const NotificationSettings = () => {
             {/* 알림 설정 텍스트 */}
             <span>{item.label}</span>
 
-            {/* 숫자 조절 (증가/감소 버튼 방식) */}
+            {/* 숫자 입력 필드 & 저장 버튼 */}
             <div className="flex items-center space-x-2">
-              <button
-                className="px-2 py-1 text-gray-600 hover:text-black"
-                onClick={() => handleValueChange(item.id, -1)}
-                disabled={item.value <= 1}
-              >
-                -
-              </button>
-              <span
-                className={`px-4 text-lg font-semibold ${
-                  item.checked ? item.color : "text-gray-400"
+              <input
+                type="text"
+                value={inputValues[item.id]}
+                onChange={(e) => handleInputChange(item.id, e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSave(item.id)}
+                className={`w-16 text-center text-lg font-semibold border-b-2 focus:outline-none focus:border-blue-500 transition ${
+                  item.checked ? item.color : "text-gray-400 border-gray-300"
                 }`}
-              >
-                {item.value}%
-              </span>
+              />
               <button
-                className="px-2 py-1 text-gray-600 hover:text-black"
-                onClick={() => handleValueChange(item.id, 1)}
-                disabled={item.value >= 99}
+                className="px-4 py-1 text-white bg-blue-500 rounded hover:bg-blue-600 transition"
+                onClick={() => handleSave(item.id)}
               >
-                +
+                저장
               </button>
             </div>
 
