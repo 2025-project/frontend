@@ -62,60 +62,67 @@ const StockDetails: React.FC<StockDetailsProps> = ({
         <h3 className="text-lg font-semibold text-gray-700">실시간 시세</h3>
         {isClient ? (
           marketData.length > 0 ? (
-            <table className="w-full text-center mt-2">
-              <thead>
-                <tr className="border-b border-[#e8e8e8] text-gray-500 text-sm">
-                  <th className="p-2">체결가</th>
-                  <th className="p-2">체결량</th>
-                  <th className="p-2">등락률</th>
-                  <th className="p-2">거래량(주)</th>
-                  <th className="p-2">시간</th>
-                </tr>
-              </thead>
-              <tbody>
-                {marketData.map((data, index) => {
-                  const previousPrice =
-                    index > 0
-                      ? parseFloat(
-                          marketData[index - 1].price.replace(/[^0-9.-]+/g, "")
-                        )
-                      : parseFloat(data.price.replace(/[^0-9.-]+/g, ""));
+            <div className="overflow-auto">
+              <table className="w-full text-center mt-2">
+                <thead>
+                  <tr className="border-b border-[#e8e8e8] text-gray-500 text-sm">
+                    <th className="p-2">체결가</th>
+                    <th className="p-2">체결량</th>
+                    <th className="p-2">등락률</th>
+                    <th className="p-2">거래량(주)</th>
+                    <th className="p-2">시간</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {marketData.map((data, index) => {
+                    const previousPrice =
+                      index > 0
+                        ? parseFloat(
+                            marketData[index - 1].price.replace(
+                              /[^0-9.-]+/g,
+                              ""
+                            )
+                          )
+                        : parseFloat(data.price.replace(/[^0-9.-]+/g, ""));
 
-                  const currentPrice = parseFloat(
-                    data.price.replace(/[^0-9.-]+/g, "")
-                  );
+                    const currentPrice = parseFloat(
+                      data.price.replace(/[^0-9.-]+/g, "")
+                    );
 
-                  return (
-                    <tr
-                      key={index}
-                      className="border-b border-[#e8e8e8] text-gray-900 hover:bg-gray-100"
-                    >
-                      <td className="p-2">{data.price}</td>
-                      <td
-                        className={`p-2 font-semibold ${
-                          currentPrice > previousPrice
-                            ? "text-red-500"
-                            : "text-blue-500"
-                        }`}
+                    return (
+                      <tr
+                        key={index}
+                        className="border-b border-[#e8e8e8] text-gray-900 hover:bg-gray-100"
                       >
-                        {data.volume}
-                      </td>
-                      <td
-                        className={`p-2 font-semibold ${
-                          parseFloat(data.changeRate) > 0
-                            ? "text-red-500"
-                            : "text-blue-500"
-                        }`}
-                      >
-                        {data.changeRate}
-                      </td>
-                      <td className="p-2 text-gray-500">{data.tradeVolume}</td>
-                      <td className="p-2 text-gray-500">{data.time}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                        <td className="p-2">{data.price}</td>
+                        <td
+                          className={`p-2 font-semibold ${
+                            currentPrice > previousPrice
+                              ? "text-red-500"
+                              : "text-blue-500"
+                          }`}
+                        >
+                          {data.volume}
+                        </td>
+                        <td
+                          className={`p-2 font-semibold ${
+                            parseFloat(data.changeRate) > 0
+                              ? "text-red-500"
+                              : "text-blue-500"
+                          }`}
+                        >
+                          {data.changeRate}
+                        </td>
+                        <td className="p-2 text-gray-500">
+                          {data.tradeVolume}
+                        </td>
+                        <td className="p-2 text-gray-500">{data.time}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           ) : (
             <p className="text-gray-400">시세 데이터가 없습니다.</p>
           )
@@ -125,7 +132,7 @@ const StockDetails: React.FC<StockDetailsProps> = ({
       </div>
 
       {/* 그래프 영역 */}
-      <div className="w-full h-40 bg-gray-100 rounded-lg flex items-center justify-center">
+      <div className="w-full min-h-[200px] rounded-lg flex items-center justify-center">
         <Graphs />
       </div>
     </div>

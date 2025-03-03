@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React from "react";
 import {
   LineChart,
   Line,
@@ -7,7 +7,6 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  LabelList,
 } from "recharts";
 
 const data = [
@@ -55,57 +54,40 @@ const data = [
   },
 ];
 
-const CustomizedLabel: FunctionComponent<any> = (props: any) => {
-  const { x, y, stroke, value } = props;
-
-  return (
-    <text x={x} y={y} dy={-4} fill={stroke} fontSize={10} textAnchor="middle">
-      {value}
-    </text>
-  );
-};
-
-const CustomizedAxisTick: FunctionComponent<any> = (props: any) => {
-  const { x, y, payload } = props;
-
-  return (
-    <g transform={`translate(${x},${y})`}>
-      <text
-        x={0}
-        y={0}
-        dy={16}
-        textAnchor="end"
-        fill="#666"
-        transform="rotate(-35)"
-      >
-        {payload.value}
-      </text>
-    </g>
-  );
-};
-
 export default function App() {
   return (
     <LineChart
-      width={500}
-      height={300}
+      width={1200}
+      height={400}
       data={data}
       margin={{
-        top: 20,
-        right: 30,
-        left: 20,
+        top: 10,
+        right: 40,
+        left: 30,
         bottom: 10,
       }}
     >
       <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="name" height={60} tick={<CustomizedAxisTick />} />
-      <YAxis />
+      <XAxis dataKey="name" />
+      <YAxis yAxisId="left" />
+      <YAxis yAxisId="right" orientation="right" />
       <Tooltip />
       <Legend />
-      <Line type="monotone" dataKey="pv" stroke="#8884d8">
-        <LabelList content={<CustomizedLabel />} />
-      </Line>
-      <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+      <Line
+        yAxisId="left"
+        type="monotone"
+        dataKey="pv"
+        stroke="#8884d8"
+        strokeWidth={4}
+        activeDot={{ r: 8 }}
+      />
+      <Line
+        yAxisId="right"
+        type="monotone"
+        dataKey="uv"
+        stroke="#82ca9d"
+        strokeWidth={4}
+      />
     </LineChart>
   );
 }
